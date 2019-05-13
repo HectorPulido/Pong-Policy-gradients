@@ -61,7 +61,7 @@ public class PolicyAgent : MonoBehaviour {
         error = new Matrix[LayerCount];
         delta = new Matrix[LayerCount];
 
-        error[LayerCount - 1] = output - expectedOutput;
+        error[LayerCount - 1] = expectedOutput - output;
         delta[LayerCount - 1] = error[LayerCount - 1]; // * Relu(Zlast, true);
 
         for (int i = LayerCount - 2; i >= 0; i--) {
@@ -143,10 +143,10 @@ public class PolicyAgent : MonoBehaviour {
             var randomness = (Matrix.Random (output.X, output.Y, r) - 0.5) * hotnessAmplitude;
             action = randomness;
 
-            print (action);
+            // print (action);
         } else {
             action = output;
-            print ($"<b>{action}</b>");
+            // print ($"<b>{action}</b>");
         }
 
         // print (action);
@@ -156,7 +156,7 @@ public class PolicyAgent : MonoBehaviour {
         //SAVE GRADIENTS
         Matrix[] error, delta;
 
-        BackPropagation (out delta, out error, action, output, Z);
+        BackPropagation (out delta, out error, output, action, Z);
 
         gradHistory.Add (delta);
         aHistory.Add (A);
@@ -181,7 +181,7 @@ public class PolicyAgent : MonoBehaviour {
 
             for (int j = 0; j < W.Length; j++) {
 
-                W[j] -= (aHistory[i][j].T * gradHistory[i][j + 1]) *
+                W[j] += (aHistory[i][j].T * gradHistory[i][j + 1]) *
                     (learningRate * -decay);
             }
         }

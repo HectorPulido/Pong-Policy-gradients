@@ -22,11 +22,11 @@ public class PolicyRacket : PolicyAgent {
         rb.gravityScale = 0;
 
         score.onScore = () => {
-            reward++;
+            reward += 1;
         };
 
         score.onAntiScore = () => {
-            reward--;
+            reward -= 5;
         };
 
     }
